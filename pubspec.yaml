@@ -1,5 +1,5 @@
 name: flutter_xr
-description: "A new Flutter plugin project."
+description: "Flutter plugin for (XR/AR/VR) applications. Support Android XR SDK"
 version: 0.0.1
 homepage:
 
