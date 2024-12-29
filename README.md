@@ -1,5 +1,6 @@
 # flutter_xr
 
+(In Dev-Mode)
 Flutter plugin for (XR/AR/VR) applications. Support Android XR SDK
 ## Getting Started
 
