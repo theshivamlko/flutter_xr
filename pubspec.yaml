@@ -1,7 +1,7 @@
 name: flutter_xr
 description: "A new Flutter project."
 version: 0.0.1-dev
-homepage:
+homepage: https://github.com/theshivamlko/flutter_xr
 
 environment:
   sdk: ^3.10.1
