@@ -19,6 +19,9 @@ class FlutterXrPlugin :
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_xr")
         channel.setMethodCallHandler(this)
+
+       // MyMessageApi.setUp(flutterPluginBinding.binaryMessenger, PigeonImplementation())
+
     }
 
     override fun onMethodCall(
