@@ -50,8 +50,8 @@ class FlutterXRPigeon {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<bool> isSpatialEnabled() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.isSpatialEnabled$pigeonVar_messageChannelSuffix';
+  Future<bool> isSpatialUiEnabled() async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.isSpatialUiEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -74,6 +74,28 @@ class FlutterXRPigeon {
       );
     } else {
       return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<void> setSpatialUiEnabled(bool enable) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.setSpatialUiEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[enable]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
     }
   }
 }

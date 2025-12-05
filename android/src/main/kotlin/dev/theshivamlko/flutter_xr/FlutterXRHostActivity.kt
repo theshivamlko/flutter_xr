@@ -76,7 +76,7 @@ import dev.theshivamlko.flutter_xr.ui.theme.Typography
 import io.flutter.embedding.android.FlutterSurfaceView
 import io.flutter.embedding.android.FlutterView
 
-class FlutterXRHostActivity: ComponentActivity() {
+class FlutterXRHostActivity : ComponentActivity() {
 
 
     @SuppressLint("RestrictedApi")
@@ -87,26 +87,33 @@ class FlutterXRHostActivity: ComponentActivity() {
         setContent {
             MyXRApplicationTheme {
 
+                // Bridge
+//                FlutterComposeBridge.spatialUiState=LocalSpatialCapabilities.current.isSpatialUiEnabled
+
+
+
                 val spatialConfiguration = LocalSpatialConfiguration.current
                 println("isSpatialUiEnabled  " + LocalSpatialCapabilities.current.isSpatialUiEnabled)
+
+
                 if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
                     Subspace {
                         MySpatialContent(
                             onRequestHomeSpaceMode = spatialConfiguration::requestHomeSpaceMode
                         )
                     }
-                }
-                 else {
+                } else {
                     Flutter2DContent()
-               }
-               /* Subspace {
-                    FlutterInsideComposeScreen()
-                }*/
+                }
+                /* Subspace {
+                     FlutterInsideComposeScreen()
+                 }*/
 
             }
         }
     }
 }
+
 
 
 @Composable
@@ -119,7 +126,9 @@ fun FlutterSpatialContent() {
 fun Flutter2DContent() {
 
     AndroidView(
-        modifier = Modifier.width(1280.dp).height(800.dp),
+        modifier = Modifier
+            .width(1280.dp)
+            .height(800.dp),
 
         factory = { ctx ->
             val activity = ctx as Activity
@@ -244,7 +253,8 @@ fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
 
         MainContent(
             modifier = Modifier
-                .fillMaxSize().background(color = Color.White)
+                .fillMaxSize()
+                .background(color = Color.White)
                 .padding(48.dp)
         )
 
@@ -267,13 +277,16 @@ fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
             FullWidthSearchBar(
-                modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
+                modifier = Modifier
+                    .height(64.dp)
+                    .padding(horizontal = 32.dp),
                 query = searchQuery,
                 onQueryChange = { newQuery: String ->
                     searchQuery = newQuery
                     println(searchQuery)
                 }
-            )}
+            )
+        }
 
 
     }
@@ -285,7 +298,8 @@ fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
     ) {
         MainContent(
             modifier = Modifier
-                .fillMaxSize().background(color = Color.White)
+                .fillMaxSize()
+                .background(color = Color.White)
                 .padding(48.dp)
         )
 
@@ -323,10 +337,10 @@ fun FullWidthSearchBar(
                 onValueChange = { newValue ->
                     internalQuery = newValue
                     onQueryChange(newValue)
-                },                placeholder = { Text(text = stringResource(android.R.string.search_go)) },
+                }, placeholder = { Text(text = stringResource(android.R.string.search_go)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxSize(),
-                colors = TextFieldDefaults.colors(  Color.White),
+                colors = TextFieldDefaults.colors(Color.White),
                 shape = RoundedCornerShape(28.dp)
             )
         }
@@ -338,7 +352,9 @@ fun FullWidthSearchBar(
 fun My2DContent(onRequestFullSpaceMode: () -> Unit) {
     Surface {
         Row(
-            modifier = Modifier.fillMaxSize().background(Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             MainContent(modifier = Modifier.padding(48.dp))
@@ -367,8 +383,8 @@ fun MainContent(modifier: Modifier = Modifier) {
 fun FullSpaceModeIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
-            painter = painterResource(id =android.R.mipmap.sym_def_app_icon),
-            contentDescription ="contentDescription"
+            painter = painterResource(id = android.R.mipmap.sym_def_app_icon),
+            contentDescription = "contentDescription"
         )
     }
 }
@@ -387,19 +403,19 @@ fun HomeSpaceModeIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) 
 @Composable
 fun My2dContentPreview() {
 
-        My2DContent(onRequestFullSpaceMode = {})
+    My2DContent(onRequestFullSpaceMode = {})
 
 }
 
 @Preview(showBackground = true)
 @Composable
 fun FullSpaceModeButtonPreview() {
-        FullSpaceModeIconButton(onClick = {})
+    FullSpaceModeIconButton(onClick = {})
 }
 
 @PreviewLightDark
 @Composable
 fun HomeSpaceModeButtonPreview() {
-        HomeSpaceModeIconButton(onClick = {})
+    HomeSpaceModeIconButton(onClick = {})
 
 }

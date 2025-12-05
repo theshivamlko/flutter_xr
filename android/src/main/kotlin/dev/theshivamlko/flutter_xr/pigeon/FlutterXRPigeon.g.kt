@@ -58,7 +58,8 @@ private open class FlutterXRPigeonPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FlutterXRPigeon {
-  fun isSpatialEnabled(): Boolean
+  fun isSpatialUiEnabled(): Boolean
+  fun setSpatialUiEnabled(enable: Boolean)
 
   companion object {
     /** The codec used by FlutterXRPigeon. */
@@ -70,11 +71,29 @@ interface FlutterXRPigeon {
     fun setUp(binaryMessenger: BinaryMessenger, api: FlutterXRPigeon?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.isSpatialEnabled$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.isSpatialUiEnabled$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
-              listOf(api.isSpatialEnabled())
+              listOf(api.isSpatialUiEnabled())
+            } catch (exception: Throwable) {
+              FlutterXRPigeonPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.setSpatialUiEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val enableArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setSpatialUiEnabled(enableArg)
+              listOf(null)
             } catch (exception: Throwable) {
               FlutterXRPigeonPigeonUtils.wrapError(exception)
             }

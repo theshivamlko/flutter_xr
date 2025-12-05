@@ -17,30 +17,37 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isSpatialEnabled = false;
+  int count =1;
+
   final _flutterXrPlugin = FlutterXr();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      ++count;
+      print("Count $count");
+     /* setState(() {
+
+      });*/
+    },);
+
+    Timer(Duration(seconds: 3), () {
+      initPlatformState();
+    });
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
     try {
-      isSpatialEnabled =
-          await _flutterXrPlugin.isSpatialEnabled() ;
+      isSpatialEnabled = await _flutterXrPlugin.isSpatialUiEnabled();
     } on PlatformException catch (e) {
       print(e);
     }
 
-
     if (!mounted) return;
 
-    setState(() {
-     });
+    setState(() {});
   }
 
   @override
@@ -48,14 +55,26 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Text('isSpatialEnabled: $isSpatialEnabled\n\n',style: TextStyle(fontSize: 30),),
-            ],
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  'Count: $count\n\n',
+                  style: TextStyle(fontSize: 30),
+                ),Text(
+                  'isSpatialEnabled: $isSpatialEnabled\n\n',
+                  style: TextStyle(fontSize: 30),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    isSpatialEnabled ? "Disable Spatial" : "Enable Spatial",
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

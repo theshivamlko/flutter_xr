@@ -15,14 +15,14 @@ class FlutterXRHostApplication: Application() {
         super.onCreate()
 
         flutterEngine = FlutterEngine(this)
-//        flutterEngine.navigationChannel.setInitialRoute("/")
+        flutterEngine.navigationChannel.setInitialRoute("/")
         flutterEngine.dartExecutor.executeDartEntrypoint(
             DartExecutor.DartEntrypoint.createDefault()
         )
 
-        FlutterEngineCache
-            .getInstance()
-            .put("main", flutterEngine)
+//        FlutterEngineCache
+//            .getInstance()
+//            .put("main", flutterEngine)
 
     }
 }
