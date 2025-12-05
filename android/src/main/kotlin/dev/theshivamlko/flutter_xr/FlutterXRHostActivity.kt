@@ -2,11 +2,13 @@ package dev.theshivamlko.flutter_xr
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,10 +23,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.platform.LocalSpatialCapabilities
@@ -58,6 +66,15 @@ import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.OrbiterOffsetType
 import androidx.xr.compose.subspace.SpatialPanel
 import androidx.xr.compose.subspace.layout.SpatialRoundedCornerShape
+import dev.theshivamlko.flutter_xr.ui.theme.Pink40
+import dev.theshivamlko.flutter_xr.ui.theme.Pink80
+import dev.theshivamlko.flutter_xr.ui.theme.Purple40
+import dev.theshivamlko.flutter_xr.ui.theme.Purple80
+import dev.theshivamlko.flutter_xr.ui.theme.PurpleGrey40
+import dev.theshivamlko.flutter_xr.ui.theme.PurpleGrey80
+import dev.theshivamlko.flutter_xr.ui.theme.Typography
+import io.flutter.embedding.android.FlutterSurfaceView
+import io.flutter.embedding.android.FlutterView
 
 class FlutterXRHostActivity: ComponentActivity() {
 
@@ -67,24 +84,131 @@ class FlutterXRHostActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
-
         setContent {
-                val spatialConfiguration = LocalSpatialConfiguration.current
-                println("isSpatialUiEnabled  "+LocalSpatialCapabilities.current.isSpatialUiEnabled)
+            MyXRApplicationTheme {
 
-                //   if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
-                Subspace {
-                    MySpatialContent(
-                        onRequestHomeSpaceMode = spatialConfiguration::requestHomeSpaceMode
-                    )
+                val spatialConfiguration = LocalSpatialConfiguration.current
+                println("isSpatialUiEnabled  " + LocalSpatialCapabilities.current.isSpatialUiEnabled)
+                if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
+                    Subspace {
+                        MySpatialContent(
+                            onRequestHomeSpaceMode = spatialConfiguration::requestHomeSpaceMode
+                        )
+                    }
                 }
-                /*  } else {
-                      My2DContent(onRequestFullSpaceMode = spatialConfiguration::requestFullSpaceMode)
-                  }*/
+                 else {
+                   My2DContent(onRequestFullSpaceMode = spatialConfiguration::requestFullSpaceMode)
+               }
+               /* Subspace {
+                    FlutterInsideComposeScreen()
+                }*/
+
+            }
         }
     }
 }
+
+
+@Composable
+fun FlutterInsideComposeScreen() {
+    val context = LocalContext.current
+    print("FlutterInsideComposeScreen")
+
+//    val engineOrbiter  = (context.applicationContext as MyApplication).engineOrbiter
+    Subspace {
+
+        SpatialAndroidViewPanel(
+
+            modifier = SubspaceModifier.width(1280.dp).height(800.dp).resizable().movable(),
+            factory = { ctx ->
+                val activity = ctx as Activity
+                val surfaceView = FlutterSurfaceView(activity)
+                val flutterView = FlutterView(activity, surfaceView)
+
+                flutterView.post {
+                    flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
+                    FlutterXRHostApplication.flutterEngine.lifecycleChannel.appIsResumed()
+                }
+
+                // IMPORTANT: Force XR to refresh this view every frame
+                flutterView.viewTreeObserver.addOnDrawListener {
+                    flutterView.invalidate()
+                }
+
+                flutterView
+
+
+            }
+        )
+
+        // LEFT ORBITER → SMALL SECOND FLUTTER PANEL
+        /*  Orbiter(
+              position = ContentEdge.Top,
+              alignment = Alignment.CenterHorizontally,
+              offsetType = OrbiterOffsetType.InnerEdge,
+              shape = SpatialRoundedCornerShape(CornerSize(28.dp))
+          ) {
+              AndroidView(
+                  modifier = Modifier
+                      .width(480.dp)
+                      .height(360.dp),
+                  factory = { ctx ->
+                      FlutterView(ctx).apply {
+                          attachToFlutterEngine(engineOrbiter)
+                      }
+                  }
+              )
+          }*/
+    }
+}
+
+
+@Composable
+fun MyXRApplicationTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    // Dynamic color is available on Android 12+
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
+
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+private val DarkColorScheme = darkColorScheme(
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
+)
 
 @SuppressLint("RestrictedApi")
 @Composable
@@ -95,7 +219,7 @@ fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
 
         MainContent(
             modifier = Modifier
-                .fillMaxSize().background(color = Color.Red)
+                .fillMaxSize().background(color = Color.White)
                 .padding(48.dp)
         )
 
@@ -136,7 +260,7 @@ fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
     ) {
         MainContent(
             modifier = Modifier
-                .fillMaxSize().background(color = Color.Red)
+                .fillMaxSize().background(color = Color.White)
                 .padding(48.dp)
         )
 
@@ -189,7 +313,7 @@ fun FullWidthSearchBar(
 fun My2DContent(onRequestFullSpaceMode: () -> Unit) {
     Surface {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(Color.White),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             MainContent(modifier = Modifier.padding(48.dp))
@@ -206,7 +330,12 @@ fun My2DContent(onRequestFullSpaceMode: () -> Unit) {
 
 @Composable
 fun MainContent(modifier: Modifier = Modifier) {
-    Text(text =  "MainContent", modifier = modifier)
+    Text(
+        text = "MainContent",
+        modifier = modifier,
+        color = Color.Black,
+        fontSize = 48.sp
+    )
 }
 
 @Composable
