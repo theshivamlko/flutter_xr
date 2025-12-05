@@ -1,1 +1,16 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "androidx.compose.compiler") {
+                useModule("androidx.compose.compiler:compiler-gradle-plugin:1.5.4")
+            }
+        }
+    }
+}
+
 rootProject.name = 'flutter_xr'

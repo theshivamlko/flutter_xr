@@ -1,5 +1,6 @@
 package dev.theshivamlko.flutter_xr
 
+import dev.theshivamlko.flutter_xr.FlutterXrPluginImplementation
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -19,6 +20,8 @@ class FlutterXrPlugin :
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_xr")
         channel.setMethodCallHandler(this)
+
+       // FlutterXRPigeon.setUp(flutterPluginBinding.binaryMessenger, api = FlutterXrPluginImplementation())
     }
 
     override fun onMethodCall(

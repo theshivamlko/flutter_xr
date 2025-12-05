@@ -1,7 +1,7 @@
 name: flutter_xr
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: "Flutter plugin for (XR/AR/VR) applications, based on Android XR SDK"
+version: 0.0.1-dev
+homepage: https://github.com/theshivamlko/flutter_xr
 
 environment:
   sdk: ^3.10.1
@@ -16,6 +16,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  pigeon: ^26.1.4
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

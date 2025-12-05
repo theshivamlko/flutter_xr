@@ -4,7 +4,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="dev.theshivamlko.flutter_xr.FlutterXRHostActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
