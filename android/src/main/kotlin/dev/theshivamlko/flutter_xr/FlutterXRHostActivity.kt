@@ -90,18 +90,12 @@ class FlutterXRHostActivity : ComponentActivity() {
                 // Bridge
 //                FlutterComposeBridge.spatialUiState=LocalSpatialCapabilities.current.isSpatialUiEnabled
 
-
-
                 val spatialConfiguration = LocalSpatialConfiguration.current
                 println("isSpatialUiEnabled  " + LocalSpatialCapabilities.current.isSpatialUiEnabled)
 
 
                 if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
-                    Subspace {
-                        MySpatialContent(
-                            onRequestHomeSpaceMode = spatialConfiguration::requestHomeSpaceMode
-                        )
-                    }
+                    FlutterSpatialContent()
                 } else {
                     Flutter2DContent()
                 }
@@ -118,41 +112,8 @@ class FlutterXRHostActivity : ComponentActivity() {
 
 @Composable
 fun FlutterSpatialContent() {
-
-
-}
-
-@Composable
-fun Flutter2DContent() {
-
-    AndroidView(
-        modifier = Modifier
-            .width(1280.dp)
-            .height(800.dp),
-
-        factory = { ctx ->
-            val activity = ctx as Activity
-            val flutterView = FlutterView(activity)
-            flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
-
-            flutterView
-
-
-        })
-
-}
-
-
-@Composable
-fun FlutterInsideComposeScreen() {
-    val context = LocalContext.current
-    print("FlutterInsideComposeScreen")
-
-//    val engineOrbiter  = (context.applicationContext as MyApplication).engineOrbiter
     Subspace {
-
         SpatialAndroidViewPanel(
-
             modifier = SubspaceModifier.width(1280.dp).height(800.dp).resizable().movable(),
             factory = { ctx ->
                 val activity = ctx as Activity
@@ -174,27 +135,41 @@ fun FlutterInsideComposeScreen() {
 
             }
         )
-
-        // LEFT ORBITER → SMALL SECOND FLUTTER PANEL
-        /*  Orbiter(
-              position = ContentEdge.Top,
-              alignment = Alignment.CenterHorizontally,
-              offsetType = OrbiterOffsetType.InnerEdge,
-              shape = SpatialRoundedCornerShape(CornerSize(28.dp))
-          ) {
-              AndroidView(
-                  modifier = Modifier
-                      .width(480.dp)
-                      .height(360.dp),
-                  factory = { ctx ->
-                      FlutterView(ctx).apply {
-                          attachToFlutterEngine(engineOrbiter)
-                      }
-                  }
-              )
-          }*/
     }
+
 }
+
+@Composable
+fun Flutter2DContent() {
+
+
+    AndroidView(
+        modifier = Modifier
+            .width(1280.dp)
+            .height(800.dp),
+
+        factory = { ctx ->
+            val activity = ctx as Activity
+            val flutterView = FlutterView(activity)
+            flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
+            flutterView.post {
+                println("flutterView post")
+                FlutterXRHostApplication.flutterEngine.lifecycleChannel.appIsResumed()
+            }
+
+            // REQUIRED FOR XR 2D MODE
+            flutterView.viewTreeObserver.addOnDrawListener {
+                println("flutterView ")
+//                flutterView.invalidate()
+            }
+
+            flutterView
+
+
+        })
+
+}
+
 
 
 @Composable
@@ -244,68 +219,6 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-@SuppressLint("RestrictedApi")
-@Composable
-fun MySpatialContent(onRequestHomeSpaceMode: () -> Unit) {
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-
-    SpatialPanel(SubspaceModifier.width(1280.dp).height(800.dp).resizable().movable()) {
-
-        MainContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.White)
-                .padding(48.dp)
-        )
-
-        Orbiter(
-            position = ContentEdge.Top,
-            alignment = Alignment.End,
-            offsetType = OrbiterOffsetType.OuterEdge,
-
-            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
-        ) {
-            HomeSpaceModeIconButton(
-                onClick = onRequestHomeSpaceMode,
-                modifier = Modifier.size(56.dp)
-            )
-        }
-        Orbiter(
-            position = ContentEdge.Top,
-            alignment = Alignment.End,
-            offsetType = OrbiterOffsetType.InnerEdge,
-            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
-        ) {
-            FullWidthSearchBar(
-                modifier = Modifier
-                    .height(64.dp)
-                    .padding(horizontal = 32.dp),
-                query = searchQuery,
-                onQueryChange = { newQuery: String ->
-                    searchQuery = newQuery
-                    println(searchQuery)
-                }
-            )
-        }
-
-
-    }
-    Orbiter(
-        position = ContentEdge.Start,
-        alignment = Alignment.CenterVertically,
-        offsetType = OrbiterOffsetType.InnerEdge,
-        shape = SpatialRoundedCornerShape(CornerSize(28.dp))
-    ) {
-        MainContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.White)
-                .padding(48.dp)
-        )
-
-
-    }
-}
 
 
 @Composable

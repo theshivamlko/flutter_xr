@@ -28,9 +28,9 @@ class _MyAppState extends State<MyApp> {
     Timer.periodic(Duration(seconds: 3), (timer) {
       ++count;
       print("Count $count");
-     /* setState(() {
+      setState(() {
 
-      });*/
+      });
     },);
 
     Timer(Duration(seconds: 3), () {
