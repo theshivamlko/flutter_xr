@@ -13,7 +13,7 @@ import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
-private object MessagePigeonUtils {
+private object FlutterXRPigeonPigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
@@ -47,7 +47,7 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
-private open class MessagePigeonCodec : StandardMessageCodec() {
+private open class FlutterXRPigeonPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return     super.readValueOfType(type, buffer)
   }
@@ -57,26 +57,26 @@ private open class MessagePigeonCodec : StandardMessageCodec() {
 }
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
-interface FlutterXR {
+interface FlutterXRPigeon {
   fun isSpatialEnabled(): Boolean
 
   companion object {
-    /** The codec used by FlutterXR. */
+    /** The codec used by FlutterXRPigeon. */
     val codec: MessageCodec<Any?> by lazy {
-      MessagePigeonCodec()
+      FlutterXRPigeonPigeonCodec()
     }
-    /** Sets up an instance of `FlutterXR` to handle messages through the `binaryMessenger`. */
+    /** Sets up an instance of `FlutterXRPigeon` to handle messages through the `binaryMessenger`. */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FlutterXR?, messageChannelSuffix: String = "") {
+    fun setUp(binaryMessenger: BinaryMessenger, api: FlutterXRPigeon?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXR.isSpatialEnabled$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.isSpatialEnabled$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.isSpatialEnabled())
             } catch (exception: Throwable) {
-              MessagePigeonUtils.wrapError(exception)
+              FlutterXRPigeonPigeonUtils.wrapError(exception)
             }
             reply.reply(wrapped)
           }

@@ -27,3 +27,7 @@
 
 FlutterXR
 
+Native Functionality
+- isSpatialEnabled
+- toggle SpatialEnabled full and normal
+- Check Android XR platform
