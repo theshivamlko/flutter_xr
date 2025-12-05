@@ -97,7 +97,7 @@ class FlutterXRHostActivity: ComponentActivity() {
                     }
                 }
                  else {
-                   My2DContent(onRequestFullSpaceMode = spatialConfiguration::requestFullSpaceMode)
+                    Flutter2DContent()
                }
                /* Subspace {
                     FlutterInsideComposeScreen()
@@ -106,6 +106,31 @@ class FlutterXRHostActivity: ComponentActivity() {
             }
         }
     }
+}
+
+
+@Composable
+fun FlutterSpatialContent() {
+
+
+}
+
+@Composable
+fun Flutter2DContent() {
+
+    AndroidView(
+        modifier = Modifier.width(1280.dp).height(800.dp),
+
+        factory = { ctx ->
+            val activity = ctx as Activity
+            val flutterView = FlutterView(activity)
+            flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
+
+            flutterView
+
+
+        })
+
 }
 
 

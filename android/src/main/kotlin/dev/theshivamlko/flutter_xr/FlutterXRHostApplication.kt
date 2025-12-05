@@ -20,6 +20,9 @@ class FlutterXRHostApplication: Application() {
             DartExecutor.DartEntrypoint.createDefault()
         )
 
+        FlutterEngineCache
+            .getInstance()
+            .put("main", flutterEngine)
 
     }
 }
