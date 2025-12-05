@@ -1,7 +1,7 @@
 name: flutter_xr
-description: "Flutter plugin for (XR/AR/VR) applications, based on Android XR SDK"
-version: 0.0.1-dev
-homepage: https://github.com/theshivamlko/flutter_xr
+description: "A new Flutter project."
+version: 0.0.1
+homepage:
 
 environment:
   sdk: ^3.10.1
@@ -10,17 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_web_plugins:
-    sdk: flutter
-  web: ^1.0.0
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  pigeon: ^26.1.4
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -28,31 +23,14 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   # This section identifies this Flutter project as a plugin project.
-  # The 'pluginClass' specifies the class (in Java, Kotlin, Swift, Objective-C, etc.)
-  # which should be registered in the plugin registry. This is required for
-  # using method channels.
-  # The Android 'package' specifies package in which the registered class is.
-  # This is required for using method channels on Android.
-  # The 'ffiPlugin' specifies that native code should be built and bundled.
-  # This is required for using `dart:ffi`.
-  # All these are used by the tooling to maintain consistency when
-  # adding or updating assets for this project.
+
   plugin:
     platforms:
       android:
-        package: com.theshivamlko.flutter_xr
+        package: dev.theshivamlko.flutter_xr
         pluginClass: FlutterXrPlugin
       ios:
         pluginClass: FlutterXrPlugin
-      linux:
-        pluginClass: FlutterXrPlugin
-      macos:
-        pluginClass: FlutterXrPlugin
-      windows:
-        pluginClass: FlutterXrPluginCApi
-      web:
-        pluginClass: FlutterXrWeb
-        fileName: flutter_xr_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
