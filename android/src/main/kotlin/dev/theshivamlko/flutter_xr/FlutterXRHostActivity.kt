@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +35,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,6 +56,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
+import androidx.xr.compose.platform.SpatialConfiguration
 import androidx.xr.compose.spatial.Orbiter
 import androidx.xr.compose.spatial.Subspace
 import androidx.xr.compose.subspace.SpatialAndroidViewPanel
@@ -86,12 +90,22 @@ class FlutterXRHostActivity : ComponentActivity() {
 
         setContent {
             MyXRApplicationTheme {
+             /*   Handler(Looper.getMainLooper()).postDelayed({
+                    println("Handler isSpatialUiEnabled  ")
+                    FlutterComposeBridge.spatialUiState=!FlutterComposeBridge.spatialUiState
+                }, 5000L)*/
+
 
                 // Bridge
-//                FlutterComposeBridge.spatialUiState=LocalSpatialCapabilities.current.isSpatialUiEnabled
+               FlutterComposeBridge.updateSpatialState(LocalSpatialConfiguration.current,LocalSpatialCapabilities.current)
 
-                val spatialConfiguration = LocalSpatialConfiguration.current
-                println("isSpatialUiEnabled  " + LocalSpatialCapabilities.current.isSpatialUiEnabled)
+
+                println("MyXRApplicationTheme ${FlutterComposeBridge.isSpatialUiEnabled()}")
+
+                LaunchedEffect(LocalSpatialConfiguration.current) {
+                    println("LaunchedEffect ${FlutterComposeBridge.isSpatialUiEnabled()}")
+              //      FlutterComposeBridge.setSpatialUiEnabled(isSpatialUiEnabled)
+                }
 
 
                 if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
@@ -105,6 +119,22 @@ class FlutterXRHostActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    private fun myFunctions(
+        isSpatialUiEnabled: Boolean,
+        spatialConfiguration: SpatialConfiguration
+    ) {
+        println("myFunctions $isSpatialUiEnabled")
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isSpatialUiEnabled)
+                spatialConfiguration.requestHomeSpaceMode()
+            else
+                spatialConfiguration.requestFullSpaceMode()
+
+
+        //    myFunctions(isSpatialUiEnabled, spatialConfiguration)
+        }, 5000L)
     }
 }
 

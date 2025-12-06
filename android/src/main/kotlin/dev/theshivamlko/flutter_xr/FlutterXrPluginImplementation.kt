@@ -9,8 +9,13 @@ class FlutterXrPluginImplementation  : FlutterXRPigeon {
        return  FlutterComposeBridge.isSpatialUiEnabled()
     }
 
-    override fun setSpatialUiEnabled(enable: Boolean) {
-        TODO("Not yet implemented")
+    override fun requestFullSpaceMode() {
+        FlutterComposeBridge.requestFullSpaceMode()
+    }
+
+    override fun requestHomeSpaceMode() {
+        FlutterComposeBridge.requestHomeSpaceMode()
+
     }
 
 

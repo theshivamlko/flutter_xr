@@ -59,7 +59,8 @@ private open class FlutterXRPigeonPigeonCodec : StandardMessageCodec() {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FlutterXRPigeon {
   fun isSpatialUiEnabled(): Boolean
-  fun setSpatialUiEnabled(enable: Boolean)
+  fun requestFullSpaceMode()
+  fun requestHomeSpaceMode()
 
   companion object {
     /** The codec used by FlutterXRPigeon. */
@@ -86,13 +87,27 @@ interface FlutterXRPigeon {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.setSpatialUiEnabled$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.requestFullSpaceMode$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val enableArg = args[0] as Boolean
+          channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
-              api.setSpatialUiEnabled(enableArg)
+              api.requestFullSpaceMode()
+              listOf(null)
+            } catch (exception: Throwable) {
+              FlutterXRPigeonPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.requestHomeSpaceMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.requestHomeSpaceMode()
               listOf(null)
             } catch (exception: Throwable) {
               FlutterXRPigeonPigeonUtils.wrapError(exception)

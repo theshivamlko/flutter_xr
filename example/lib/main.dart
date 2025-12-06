@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isSpatialEnabled = false;
-  int count =1;
+  int count = 1;
 
   final _flutterXrPlugin = FlutterXr();
 
@@ -25,29 +25,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    Timer.periodic(Duration(seconds: 3), (timer) {
+    Timer.periodic(Duration(seconds: 5), (timer) {
       ++count;
       print("Count $count");
-      setState(() {
-
-      });
-    },);
-
-    Timer(Duration(seconds: 3), () {
-      initPlatformState();
+      setState(() {});
     });
-  }
-
-  Future<void> initPlatformState() async {
-    try {
-      isSpatialEnabled = await _flutterXrPlugin.isSpatialUiEnabled();
-    } on PlatformException catch (e) {
-      print(e);
-    }
-
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   @override
@@ -60,15 +42,17 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: Column(
               children: [
+                Text('Count: $count\n\n', style: TextStyle(fontSize: 30)),
                 Text(
-                  'Count: $count\n\n',
-                  style: TextStyle(fontSize: 30),
-                ),Text(
                   'isSpatialEnabled: $isSpatialEnabled\n\n',
                   style: TextStyle(fontSize: 30),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => checkSpatialEnabled(),
+                  child: Text("Check Spatial Status"),
+                ),
+                ElevatedButton(
+                  onPressed: () => toggleSpatialFullScreen(),
                   child: Text(
                     isSpatialEnabled ? "Disable Spatial" : "Enable Spatial",
                   ),
@@ -79,5 +63,30 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  Future<void> checkSpatialEnabled() async {
+    print("checkSpatialEnabled1");
+    try {
+      isSpatialEnabled = await _flutterXrPlugin.isSpatialUiEnabled();
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return;
+    print("checkSpatialEnabled2  $isSpatialEnabled");
+
+    setState(() {});
+  }
+
+  void toggleSpatialFullScreen()async {
+    print("toggleSpatialFullScreen $isSpatialEnabled");
+    if (isSpatialEnabled) {
+    await  _flutterXrPlugin.requestHomeSpaceMode();
+    }else{
+     await _flutterXrPlugin.requestFullSpaceMode();
+    }
+    print("toggleSpatialFullScreen 2");
+    checkSpatialEnabled();
   }
 }
