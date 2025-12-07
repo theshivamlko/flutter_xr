@@ -1,3 +1,7 @@
+## 0.0.2
+
+* Pub.dev release
+
 ## 0.0.2-dev
 
 * Check spatial environment status
