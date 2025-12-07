@@ -1,13 +1,10 @@
-// filepath: lib/src/flutter_xr.dart
 
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_xr/flutter_xr.dart';
 import 'package:flutter_xr/src/pigeon/pigeon.g.dart';
 
-import '../flutter_xr_platform_interface.dart';
 import 'XRCallbackHandler.dart';
+import 'helper.dart';
 
 abstract class FlutterXrInterface {
   Future<bool> isSpatialUiEnabled();
@@ -65,13 +62,13 @@ class FlutterXr implements FlutterXrInterface {
     Map<String, WidgetBuilder> appRoutes = {};
 
     if (leftOrbit != null) {
-      appRoutes["/left"] = (_) => leftOrbit!.child;
+      appRoutes["/left"] = (_) => leftOrbit.child;
       orbiterConfig["/left"] = OrbiterConfig(
-        contentEdge: leftOrbit!.contentEdge.name,
-        alignment: leftOrbit!.alignment.name,
-        orbiterOffsetType: leftOrbit!.orbiterOffsetType.name,
-        width: leftOrbit!.width,
-        height: leftOrbit!.height,
+        contentEdge: leftOrbit.contentEdge.name,
+        alignment: leftOrbit.alignment.name,
+        orbiterOffsetType: leftOrbit.orbiterOffsetType.name,
+        width: leftOrbit.width,
+        height: leftOrbit.height,
       );
     }
     if (rightOrbit != null) {
