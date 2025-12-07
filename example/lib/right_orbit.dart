@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class RightOrbit extends StatelessWidget {
+class RightOrbit extends StatefulWidget {
   const RightOrbit({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const RightOrbitFeed();
-  }
+  State<RightOrbit> createState() => _RightOrbitState();
 }
 
-class RightOrbitFeed extends StatelessWidget {
-  const RightOrbitFeed();
+class _RightOrbitState extends State<RightOrbit> {
+
+
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,20 @@ class RightOrbitFeed extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final item = items[index];
-          final bool isHighlighted = index == 1; // second card highlighted like image
-          return _FeedCard(item: item, highlighted: isHighlighted);
+          final bool isHighlighted =
+              index == selectedIndex;
+          return GestureDetector(
+            onTap: () {
+              selectedIndex=index;
+              setState(() {});
+            },
+            child: _FeedCard(item: item, highlighted: isHighlighted),
+          );
         },
       ),
     );
   }
 }
-
-
 
 class _FeedItem {
   const _FeedItem({
@@ -48,7 +53,6 @@ class _FeedItem {
   final String subtitle;
 }
 
-
 class _FeedCard extends StatelessWidget {
   const _FeedCard({required this.item, this.highlighted = false});
 
@@ -61,8 +65,9 @@ class _FeedCard extends StatelessWidget {
         ? const Color(0xFF8E70DF) // purple highlight similar to screenshot
         : Colors.white;
     final Color textColor = highlighted ? Colors.white : Colors.black87;
-    final Color secondaryTextColor =
-    highlighted ? Colors.white70 : Colors.black54;
+    final Color secondaryTextColor = highlighted
+        ? Colors.white70
+        : Colors.black54;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -93,11 +98,9 @@ class _FeedCard extends StatelessWidget {
                   child: Text(
                     item.avatarLetter,
                     style: TextStyle(
-                      color: highlighted
-                          ? cardColor
-                          : Colors.black87,
+                      color: highlighted ? cardColor : Colors.black87,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -119,10 +122,7 @@ class _FeedCard extends StatelessWidget {
                           ),
                           Text(
                             item.timeAgo,
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: textColor, fontSize: 12),
                           ),
                         ],
                       ),
@@ -162,7 +162,6 @@ class _FeedCard extends StatelessWidget {
     );
   }
 }
-
 
 const List<_FeedItem> _dummyFeedItems = [
   _FeedItem(

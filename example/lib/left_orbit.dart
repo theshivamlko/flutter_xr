@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'OrbitNav.dart';
 
-class LeftOrbit extends StatelessWidget {
+class LeftOrbit extends StatefulWidget {
   const LeftOrbit({super.key});
+
+  @override
+  State<LeftOrbit> createState() => _LeftOrbitState();
+}
+
+class _LeftOrbitState extends State<LeftOrbit> {
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +17,14 @@ class LeftOrbit extends StatelessWidget {
       width: 150,
       child: OrbitNav(
         orientation: Axis.vertical,
-        currentIndex: 0,
-        onTap: (_) {},
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          print(index);
+          setState(() {
+
+            selectedIndex = index;
+          });
+        },
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Alignment;
+import 'package:flutter/material.dart'  hide Alignment;
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -122,7 +122,6 @@ class _MyAppState extends State<MyApp> {
     Timer.periodic(Duration(seconds: 1), (timer) {
       DateFormat customFormat = DateFormat("dd/MM/yyyy HH:mm:ss");
       formattedDate1 = customFormat.format(DateTime.now());
-      print("Count $formattedDate1");
       setState(() {});
     });
 
