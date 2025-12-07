@@ -1,6 +1,6 @@
-## 0.0.2
+## 0.0.5
 
-* Pub.dev release
+* Added demo gif 😅
 
 ## 0.0.2-dev
 
