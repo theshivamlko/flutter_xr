@@ -1,7 +1,7 @@
 # Flutter XR
 
 
-![](docs/raw/Flutter_XR_0.0.2-dev_Demo_theshivamlko_navoki-min.jpg)
+![](doc/raw/Flutter_XR_0.0.2-dev_Demo_theshivamlko_navoki-min.jpg)
 
 
 
