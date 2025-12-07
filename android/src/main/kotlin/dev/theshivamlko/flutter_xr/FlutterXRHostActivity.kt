@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -56,14 +58,22 @@ import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
+import androidx.xr.compose.spatial.ContentEdge
+import androidx.xr.compose.spatial.Orbiter
+import androidx.xr.compose.spatial.OrbiterOffsetType
 import androidx.xr.compose.spatial.Subspace
 import androidx.xr.compose.subspace.SpatialAndroidViewPanel
+import androidx.xr.compose.subspace.layout.SpatialRoundedCornerShape
 import androidx.xr.compose.subspace.layout.SubspaceModifier
 import androidx.xr.compose.subspace.layout.height
 import androidx.xr.compose.subspace.layout.movable
 import androidx.xr.compose.subspace.layout.resizable
 import androidx.xr.compose.subspace.layout.width
+import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.bottomEngine
+import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.leftEngine
 import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.mainEngine
+import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.rightEngine
+import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.topEngine
 import dev.theshivamlko.flutter_xr.ui.theme.Pink40
 import dev.theshivamlko.flutter_xr.ui.theme.Pink80
 import dev.theshivamlko.flutter_xr.ui.theme.Purple40
@@ -87,9 +97,12 @@ class FlutterXRHostActivity : ComponentActivity() {
         lateinit var bottomEngine: FlutterEngine
 
 
-
     }
-    fun onCreateEngine(context: Context){
+
+    fun onCreateEngine(context: Context) {
+        println("onCreateEngine")
+
+
         mainEngine = FlutterEngine(context)
         mainEngine.navigationChannel.setInitialRoute("/")
         mainEngine.dartExecutor.executeDartEntrypoint(
@@ -100,48 +113,47 @@ class FlutterXRHostActivity : ComponentActivity() {
             .getInstance()
             .put("mainEngine", mainEngine)
 
+            leftEngine = FlutterEngine(context)
+            leftEngine.navigationChannel.setInitialRoute("/left")
+            leftEngine.dartExecutor.executeDartEntrypoint(
+                DartExecutor.DartEntrypoint.createDefault()
+            )
 
-        leftEngine = FlutterEngine(context)
-        leftEngine.navigationChannel.setInitialRoute("/left")
-        leftEngine.dartExecutor.executeDartEntrypoint(
-            DartExecutor.DartEntrypoint.createDefault()
-        )
+            FlutterEngineCache
+                .getInstance()
+                .put("leftEngine", leftEngine)
 
-        FlutterEngineCache
-            .getInstance()
-            .put("leftEngine", leftEngine)
+            rightEngine = FlutterEngine(context)
+            rightEngine.navigationChannel.setInitialRoute("/right")
+            rightEngine.dartExecutor.executeDartEntrypoint(
+                DartExecutor.DartEntrypoint.createDefault()
+            )
 
-        rightEngine = FlutterEngine(context)
-        rightEngine.navigationChannel.setInitialRoute("/right")
-        rightEngine.dartExecutor.executeDartEntrypoint(
-            DartExecutor.DartEntrypoint.createDefault()
-        )
+            FlutterEngineCache
+                .getInstance()
+                .put("rightEngine", rightEngine)
 
-        FlutterEngineCache
-            .getInstance()
-            .put("rightEngine", rightEngine)
+            topEngine = FlutterEngine(context)
+            topEngine.navigationChannel.setInitialRoute("/top")
+            topEngine.dartExecutor.executeDartEntrypoint(
+                DartExecutor.DartEntrypoint.createDefault()
+            )
 
-        topEngine = FlutterEngine(context)
-        topEngine.navigationChannel.setInitialRoute("/top")
-        topEngine.dartExecutor.executeDartEntrypoint(
-            DartExecutor.DartEntrypoint.createDefault()
-        )
-
-        FlutterEngineCache
-            .getInstance()
-            .put("topEngine", topEngine)
-
+            FlutterEngineCache
+                .getInstance()
+                .put("topEngine", topEngine)
 
 
-        bottomEngine = FlutterEngine(context)
-        bottomEngine.navigationChannel.setInitialRoute("/bottom")
-        bottomEngine.dartExecutor.executeDartEntrypoint(
-            DartExecutor.DartEntrypoint.createDefault()
-        )
 
-        FlutterEngineCache
-            .getInstance()
-            .put("bottomEngine", bottomEngine)
+            bottomEngine = FlutterEngine(context)
+            bottomEngine.navigationChannel.setInitialRoute("/bottom")
+            bottomEngine.dartExecutor.executeDartEntrypoint(
+                DartExecutor.DartEntrypoint.createDefault()
+            )
+
+            FlutterEngineCache
+                .getInstance()
+                .put("bottomEngine", bottomEngine)
     }
 
     @SuppressLint("RestrictedApi")
@@ -152,14 +164,17 @@ class FlutterXRHostActivity : ComponentActivity() {
 
         setContent {
             MyXRApplicationTheme {
-             /*   Handler(Looper.getMainLooper()).postDelayed({
-                    println("Handler isSpatialUiEnabled  ")
-                    FlutterComposeBridge.spatialUiState=!FlutterComposeBridge.spatialUiState
-                }, 5000L)*/
+                /*   Handler(Looper.getMainLooper()).postDelayed({
+                       println("Handler isSpatialUiEnabled  ")
+                       FlutterComposeBridge.spatialUiState=!FlutterComposeBridge.spatialUiState
+                   }, 5000L)*/
 
 
                 // Bridge
-               FlutterComposeBridge.updateSpatialState(LocalSpatialConfiguration.current,LocalSpatialCapabilities.current)
+                FlutterComposeBridge.updateSpatialState(
+                    LocalSpatialConfiguration.current,
+                    LocalSpatialCapabilities.current
+                )
 
 
                 println("MyXRApplicationTheme ${FlutterComposeBridge.isSpatialUiEnabled()}")
@@ -173,10 +188,10 @@ class FlutterXRHostActivity : ComponentActivity() {
                             FlutterComposeBridge.sendEvent("spatial_changed")
 
                             // Update your bridge
-                         //   FlutterComposeBridge.setSpatialUiEnabled(enabled)
+                            //   FlutterComposeBridge.setSpatialUiEnabled(enabled)
 
                             // Notify Flutter via Pigeon
-                       //     SpatialEventEmitter.dart?.onSpatialUiChanged(enabled)
+                            //     SpatialEventEmitter.dart?.onSpatialUiChanged(enabled)
                         }
                 }
 
@@ -184,7 +199,7 @@ class FlutterXRHostActivity : ComponentActivity() {
                 if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
                     FlutterSpatialContent()
                 } else {
-                    Flutter2DContent()
+                    Flutter2DContent(mainEngine)
                 }
                 /* Subspace {
                      FlutterInsideComposeScreen()
@@ -195,28 +210,15 @@ class FlutterXRHostActivity : ComponentActivity() {
     }
 
 
-    private fun myFunctions(
-        isSpatialUiEnabled: Boolean,
-        spatialConfiguration: SpatialConfiguration
-    ) {
-        println("myFunctions $isSpatialUiEnabled")
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (isSpatialUiEnabled)
-                spatialConfiguration.requestHomeSpaceMode()
-            else
-                spatialConfiguration.requestFullSpaceMode()
-
-
-        //    myFunctions(isSpatialUiEnabled, spatialConfiguration)
-        }, 5000L)
-    }
 }
-
 
 
 @Composable
 fun FlutterSpatialContent() {
+    println("FlutterSpatialContent");
     Subspace {
+
+        // Main Body
         SpatialAndroidViewPanel(
             modifier = SubspaceModifier.width(1280.dp).height(800.dp).resizable().movable(),
             factory = { ctx ->
@@ -239,29 +241,90 @@ fun FlutterSpatialContent() {
 
             }
         )
+
+        Orbiter(
+            position = ContentEdge.Top,
+            alignment = Alignment.CenterHorizontally,
+            offsetType = OrbiterOffsetType.InnerEdge,
+            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
+        ) {
+
+            Flutter2DContent(topEngine)
+            /*FullWidthSearchBar(
+                 modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
+                 query = "Search here",
+                 onQueryChange = { newQuery: String ->
+
+                 }
+             )*/
+        }
+        Orbiter(
+            position = ContentEdge.Bottom,
+            alignment = Alignment.CenterHorizontally,
+            offsetType = OrbiterOffsetType.InnerEdge,
+            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
+        ) {
+            Flutter2DContent(bottomEngine)
+            /* FullWidthSearchBar(
+                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
+                  query = "Search here",
+                  onQueryChange = { newQuery: String ->
+
+                  }
+              )*/
+        }
+        Orbiter(
+            position = ContentEdge.End,
+            alignment = Alignment.CenterVertically,
+            offsetType = OrbiterOffsetType.InnerEdge,
+            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
+        ) {
+            Flutter2DContent(rightEngine)
+            /* FullWidthSearchBar(
+                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
+                  query = "Search here",
+                  onQueryChange = { newQuery: String ->
+
+                  }
+              )*/
+        }
+        Orbiter(
+            position = ContentEdge.Start,
+            alignment = Alignment.CenterVertically,
+            offsetType = OrbiterOffsetType.InnerEdge,
+            shape = SpatialRoundedCornerShape(CornerSize(28.dp))
+        ) {
+            Flutter2DContent(leftEngine)
+            /* FullWidthSearchBar(
+                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
+                  query = "Search here",
+                  onQueryChange = { newQuery: String ->
+
+                  }
+              )*/
+        }
     }
 
 }
 
-@Composable
-fun Flutter2DContent() {
 
+@Composable
+fun Flutter2DContent(engine: FlutterEngine) {
+
+     println("Flutter2DContent =>");
+     println( FlutterComposeBridge.routes);
 
     AndroidView(
-        modifier = Modifier
-            .width(1280.dp)
-            .height(800.dp),
-
+        modifier = Modifier.wrapContentSize() ,
         factory = { ctx ->
             val activity = ctx as Activity
             val flutterView = FlutterView(activity)
-            flutterView.attachToFlutterEngine(mainEngine)
+            flutterView.attachToFlutterEngine(engine)
             flutterView.post {
                 println("flutterView post")
-                mainEngine.lifecycleChannel.appIsResumed()
+                engine.lifecycleChannel.appIsResumed()
             }
 
-            // REQUIRED FOR XR 2D MODE
             flutterView.viewTreeObserver.addOnDrawListener {
                 println("flutterView ")
 //                flutterView.invalidate()
@@ -269,11 +332,9 @@ fun Flutter2DContent() {
 
             flutterView
 
-
         })
 
 }
-
 
 
 @Composable
@@ -322,7 +383,6 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
-
 
 
 @Composable

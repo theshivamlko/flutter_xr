@@ -37,6 +37,36 @@ private object FlutterXRPigeonPigeonUtils {
       )
     }
   }
+  fun deepEquals(a: Any?, b: Any?): Boolean {
+    if (a is ByteArray && b is ByteArray) {
+        return a.contentEquals(b)
+    }
+    if (a is IntArray && b is IntArray) {
+        return a.contentEquals(b)
+    }
+    if (a is LongArray && b is LongArray) {
+        return a.contentEquals(b)
+    }
+    if (a is DoubleArray && b is DoubleArray) {
+        return a.contentEquals(b)
+    }
+    if (a is Array<*> && b is Array<*>) {
+      return a.size == b.size &&
+          a.indices.all{ deepEquals(a[it], b[it]) }
+    }
+    if (a is List<*> && b is List<*>) {
+      return a.size == b.size &&
+          a.indices.all{ deepEquals(a[it], b[it]) }
+    }
+    if (a is Map<*, *> && b is Map<*, *>) {
+      return a.size == b.size && a.all {
+          (b as Map<Any?, Any?>).contains(it.key) &&
+          deepEquals(it.value, b[it.key])
+      }
+    }
+    return a == b
+  }
+      
 }
 
 /**
@@ -50,12 +80,65 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class OrbiterConfig (
+  val contentEdge: String? = null,
+  val alignment: String? = null,
+  val orbiterOffsetType: String? = null,
+  val width: Double? = null,
+  val height: Double? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): OrbiterConfig {
+      val contentEdge = pigeonVar_list[0] as String?
+      val alignment = pigeonVar_list[1] as String?
+      val orbiterOffsetType = pigeonVar_list[2] as String?
+      val width = pigeonVar_list[3] as Double?
+      val height = pigeonVar_list[4] as Double?
+      return OrbiterConfig(contentEdge, alignment, orbiterOffsetType, width, height)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      contentEdge,
+      alignment,
+      orbiterOffsetType,
+      width,
+      height,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is OrbiterConfig) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return FlutterXRPigeonPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
 private open class FlutterXRPigeonPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return     super.readValueOfType(type, buffer)
+    return when (type) {
+      129.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          OrbiterConfig.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
-    super.writeValue(stream, value)
+    when (value) {
+      is OrbiterConfig -> {
+        stream.write(129)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
   }
 }
 
@@ -65,7 +148,7 @@ interface FlutterXRPigeon {
   fun requestFullSpaceMode()
   fun requestHomeSpaceMode()
   fun listenEvents(event: String)
-  fun registerRoutes(routes: List<String>)
+  fun registerRoutes(routes: Map<String, OrbiterConfig>)
 
   companion object {
     /** The codec used by FlutterXRPigeon. */
@@ -146,7 +229,7 @@ interface FlutterXRPigeon {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val routesArg = args[0] as List<String>
+            val routesArg = args[0] as Map<String, OrbiterConfig>
             val wrapped: List<Any?> = try {
               api.registerRoutes(routesArg)
               listOf(null)

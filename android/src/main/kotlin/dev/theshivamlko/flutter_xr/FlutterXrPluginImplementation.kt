@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.flow
 class FlutterXrPluginImplementation  : FlutterXRPigeon {
     val TAG="FlutterXrPluginImplementation"
     var flutterCallback: FlutterXRPigeonCallbacks? = null
-    var routes: List<String>?= null;
 
     init {
     /*    val numbersFlow: Flow<Int> = flow {
@@ -45,8 +44,8 @@ class FlutterXrPluginImplementation  : FlutterXRPigeon {
             throw Exception("Callback not registered")
     }
 
-    override fun registerRoutes(routes: List<String>) {
-       this.routes=routes
+    override fun registerRoutes(routes: Map<String, OrbiterConfig>) {
+        println("Native $TAG registerRoutes $this $routes")
         FlutterComposeBridge.routes=routes
     }
 

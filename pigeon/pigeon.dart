@@ -1,5 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
+
+
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/pigeon.g.dart',
@@ -10,6 +12,10 @@ import 'package:pigeon/pigeon.dart';
     dartPackageName: 'flutter_xr',
   ),
 )
+
+
+
+
 @HostApi()
 abstract class FlutterXRPigeon {
   bool isSpatialUiEnabled();
@@ -20,10 +26,19 @@ abstract class FlutterXRPigeon {
 
   void listenEvents(String event);
 
-  void registerRoutes(List<String> routes);
+  void registerRoutes(Map<String,OrbiterConfig> routes);
 }
 
 @FlutterApi()
 abstract class FlutterXRPigeonCallbacks {
   void listenEvents(String event);
+}
+
+
+class OrbiterConfig{
+  String? contentEdge;
+  String? alignment;
+  String? orbiterOffsetType;
+  double? width;
+  double? height;
 }

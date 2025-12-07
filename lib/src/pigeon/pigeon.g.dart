@@ -24,6 +24,81 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   }
   return <Object?>[error.code, error.message, error.details];
 }
+bool _deepEquals(Object? a, Object? b) {
+  if (a is List && b is List) {
+    return a.length == b.length &&
+        a.indexed
+        .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+  }
+  if (a is Map && b is Map) {
+    return a.length == b.length && a.entries.every((MapEntry<Object?, Object?> entry) =>
+        (b as Map<Object?, Object?>).containsKey(entry.key) &&
+        _deepEquals(entry.value, b[entry.key]));
+  }
+  return a == b;
+}
+
+
+class OrbiterConfig {
+  OrbiterConfig({
+    this.contentEdge,
+    this.alignment,
+    this.orbiterOffsetType,
+    this.width,
+    this.height,
+  });
+
+  String? contentEdge;
+
+  String? alignment;
+
+  String? orbiterOffsetType;
+
+  double? width;
+
+  double? height;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      contentEdge,
+      alignment,
+      orbiterOffsetType,
+      width,
+      height,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static OrbiterConfig decode(Object result) {
+    result as List<Object?>;
+    return OrbiterConfig(
+      contentEdge: result[0] as String?,
+      alignment: result[1] as String?,
+      orbiterOffsetType: result[2] as String?,
+      width: result[3] as double?,
+      height: result[4] as double?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! OrbiterConfig || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
 
 
 class _PigeonCodec extends StandardMessageCodec {
@@ -33,6 +108,9 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    }    else if (value is OrbiterConfig) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -41,6 +119,8 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129: 
+        return OrbiterConfig.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -153,7 +233,7 @@ class FlutterXRPigeon {
     }
   }
 
-  Future<void> registerRoutes(List<String> routes) async {
+  Future<void> registerRoutes(Map<String, OrbiterConfig> routes) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.registerRoutes$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,

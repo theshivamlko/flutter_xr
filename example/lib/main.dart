@@ -1,20 +1,91 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Alignment;
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_xr/flutter_xr.dart';
 import 'package:flutter_xr_example/orbitWIdgets.dart';
 
-void main() {
-  runApp(
-    FlutterXRWidget(
-      mainBody: const Scaffold(),
-      leftOrbit: leftOrbit(),
-      rightOrbit: rightOrbit(),
-      topOrbit: topOrbit(),
-      bottomOrbit: bottomOrbit(),
+final _flutterXrPlugin = FlutterXr();
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  print("Flutter Main");
+
+  final appRoutes=await _flutterXrPlugin.registerRoutes(leftOrbit:Orbiter(
+    ContentEdge.start,
+    Alignment.centerVertically,
+    OrbiterOffsetType.innerEdge,
+    leftOrbit(),
+    width: 100,
+    height: 100,
+  ),
+      rightOrbit: Orbiter(
+        ContentEdge.end,
+        Alignment.centerVertically,
+        OrbiterOffsetType.innerEdge,
+        leftOrbit(),
+        width: 100,
+        height: 100,
+      ),
+    topOrbit: Orbiter(
+      ContentEdge.top,
+      Alignment.centerHorizontally,
+      OrbiterOffsetType.innerEdge,
+      leftOrbit(),
+      width: 100,
+      height: 100,
     ),
+    bottomOrbit: Orbiter(
+      ContentEdge.bottom,
+      Alignment.centerHorizontally,
+      OrbiterOffsetType.innerEdge,
+      leftOrbit(),
+      width: 100,
+      height: 100,
+    ),
+
   );
+
+  runApp(MaterialApp(home: MyApp(),routes: appRoutes,));
+
+  /* runApp(
+    FlutterXRWidget(
+      mainBody: const MyApp(),
+      flutterXr: _flutterXrPlugin,
+      leftOrbit: Orbiter(
+        ContentEdge.start,
+        Alignment.centerVertically,
+        OrbiterOffsetType.innerEdge,
+        leftOrbit(),
+        width: 100,
+        height: 100,
+      ),
+      rightOrbit: Orbiter(
+        ContentEdge.end,
+        Alignment.centerVertically,
+        OrbiterOffsetType.innerEdge,
+        leftOrbit(),
+        width: 100,
+        height: 100,
+      ),
+      topOrbit: Orbiter(
+        ContentEdge.top,
+        Alignment.centerHorizontally,
+        OrbiterOffsetType.innerEdge,
+        leftOrbit(),
+        width: 100,
+        height: 100,
+      ),
+      bottomOrbit: Orbiter(
+        ContentEdge.bottom,
+        Alignment.centerHorizontally,
+        OrbiterOffsetType.innerEdge,
+        leftOrbit(),
+        width: 100,
+        height: 100,
+      ),
+    ),
+  );*/
 }
 
 class MyApp extends StatefulWidget {
@@ -27,8 +98,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool isSpatialEnabled = false;
   int count = 1;
-
-  final _flutterXrPlugin = FlutterXr();
 
   @override
   void initState() {
@@ -48,31 +117,29 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(title: const Text('Plugin example app')),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                Text('Count: $count\n\n', style: TextStyle(fontSize: 30)),
-                Text(
-                  'isSpatialEnabled: $isSpatialEnabled\n\n',
-                  style: TextStyle(fontSize: 30),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text('Plugin example app')),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Text('Count: $count\n\n', style: TextStyle(fontSize: 30)),
+              Text(
+                'isSpatialEnabled: $isSpatialEnabled\n\n',
+                style: TextStyle(fontSize: 30),
+              ),
+              ElevatedButton(
+                onPressed: () => checkSpatialEnabled(),
+                child: Text("Check Spatial Status"),
+              ),
+              ElevatedButton(
+                onPressed: () => toggleSpatialFullScreen(),
+                child: Text(
+                  isSpatialEnabled ? "Disable Spatial" : "Enable Spatial",
                 ),
-                ElevatedButton(
-                  onPressed: () => checkSpatialEnabled(),
-                  child: Text("Check Spatial Status"),
-                ),
-                ElevatedButton(
-                  onPressed: () => toggleSpatialFullScreen(),
-                  child: Text(
-                    isSpatialEnabled ? "Disable Spatial" : "Enable Spatial",
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
