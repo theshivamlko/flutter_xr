@@ -3,7 +3,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_xr/flutter_xr.dart';
-import 'package:flutter_xr_example/orbitWIdgets.dart';
+import 'package:flutter_xr_example/bottom_orbit.dart';
+import 'package:flutter_xr_example/left_orbit.dart';
+import 'package:flutter_xr_example/right_orbit.dart';
+import 'package:flutter_xr_example/top_orbit.dart';
 import 'package:intl/intl.dart';
 
 final _flutterXrPlugin = FlutterXr();
@@ -18,7 +21,7 @@ void main() async {
       ContentEdge.start,
       Alignment.centerVertically,
       OrbiterOffsetType.innerEdge,
-      leftOrbit(),
+      LeftOrbit(),
       width: 100,
       height: 100,
     ),
@@ -26,7 +29,7 @@ void main() async {
       ContentEdge.end,
       Alignment.centerVertically,
       OrbiterOffsetType.innerEdge,
-      rightOrbit(),
+      RightOrbit(),
       width: 100,
       height: 100,
     ),
@@ -34,10 +37,12 @@ void main() async {
       ContentEdge.top,
       Alignment.centerHorizontally,
       OrbiterOffsetType.innerEdge,
-      topOrbit((value) {
-        print("topOrbit $value");
-        leftOrbitListen.value = value;
-      }),
+      TopOrbit(
+        onSearchChanged: (String value) {
+          print("topOrbit $value");
+          leftOrbitListen.value = value;
+        },
+      ),
       width: 100,
       height: 100,
     ),
@@ -45,7 +50,7 @@ void main() async {
       ContentEdge.bottom,
       Alignment.centerHorizontally,
       OrbiterOffsetType.innerEdge,
-      bottomOrbit(),
+      BottomOrbit(),
       width: 100,
       height: 100,
     ),
@@ -173,6 +178,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ),
+              Image.asset("assets/flutter-logo.png",height: 200,)
             ],
           ),
         ),
