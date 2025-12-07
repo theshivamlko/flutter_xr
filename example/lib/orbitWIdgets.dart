@@ -76,9 +76,9 @@ class OrbitNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (orientation == Axis.vertical) {
-      return _buildVertical(context);
+      return Container(color: Colors.white, child: _buildVertical(context));
     }
-    return _buildHorizontal(context);
+    return Container(color: Colors.black, child: _buildHorizontal(context));
   }
 
   Widget _buildHorizontal(BuildContext context) {
@@ -87,9 +87,12 @@ class OrbitNav extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
       onTap: onTap,
-      selectedItemColor: theme.colorScheme.primary,
-      unselectedItemColor: Colors.grey.shade600,
+      selectedItemColor: Colors.purpleAccent,
+      unselectedItemColor: Colors.white60,
       showUnselectedLabels: true,
+      iconSize: 30,
+      selectedFontSize: 20,
+      unselectedFontSize: 16,backgroundColor: Colors.black87,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.place_outlined),
@@ -110,6 +113,11 @@ class OrbitNav extends StatelessWidget {
           icon: Icon(Icons.add_circle_outline),
           activeIcon: Icon(Icons.add_circle),
           label: 'Contribute',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          activeIcon: Icon(Icons.search),
+          label: 'Search',
         ),
       ],
     );
@@ -134,14 +142,23 @@ class OrbitNav extends StatelessWidget {
         label: 'Saved',
       ),
       _NavItemData(
+        icon: Icons.search,
+        activeIcon: Icons.search,
+        label: 'Search',
+      ),
+      _NavItemData(
         icon: Icons.add_circle_outline,
         activeIcon: Icons.add_circle,
         label: 'Contribute',
       ),
+      _NavItemData(
+        icon: Icons.logout_outlined,
+        activeIcon: Icons.logout_outlined,
+        label: 'Logout',
+      ),
     ];
 
     return Container(
-      color: Colors.white,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -199,16 +216,17 @@ class _VerticalNavItem extends StatelessWidget {
             Icon(
               selected ? data.activeIcon : data.icon,
               color: selected ? Colors.deepPurple : Colors.grey.shade600,
+              size: 30,
             ),
             const SizedBox(height: 4),
-            Text(
+            /*  Text(
               data.label,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                 color: selected ? Colors.deepPurple : Colors.grey.shade600,
               ),
-            ),
+            ),*/
           ],
         ),
       ),

@@ -199,7 +199,7 @@ class FlutterXRHostActivity : ComponentActivity() {
                 if (LocalSpatialCapabilities.current.isSpatialUiEnabled) {
                     FlutterSpatialContent()
                 } else {
-                    Flutter2DContent(mainEngine)
+                    Flutter2DContent(mainEngine,Modifier.wrapContentSize())
                 }
                 /* Subspace {
                      FlutterInsideComposeScreen()
@@ -249,7 +249,7 @@ fun FlutterSpatialContent() {
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
 
-            Flutter2DContent(topEngine)
+            Flutter2DContent(topEngine, Modifier.height(80.dp))
             /*FullWidthSearchBar(
                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
                  query = "Search here",
@@ -264,7 +264,7 @@ fun FlutterSpatialContent() {
             offsetType = OrbiterOffsetType.InnerEdge,
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
-            Flutter2DContent(bottomEngine)
+            Flutter2DContent(bottomEngine,Modifier.height(80.dp))
             /* FullWidthSearchBar(
                   modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
                   query = "Search here",
@@ -279,7 +279,7 @@ fun FlutterSpatialContent() {
             offsetType = OrbiterOffsetType.InnerEdge,
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
-            Flutter2DContent(rightEngine)
+            Flutter2DContent(rightEngine,Modifier.width(200.dp))
             /* FullWidthSearchBar(
                   modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
                   query = "Search here",
@@ -294,7 +294,7 @@ fun FlutterSpatialContent() {
             offsetType = OrbiterOffsetType.InnerEdge,
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
-            Flutter2DContent(leftEngine)
+            Flutter2DContent(leftEngine,Modifier.width(80.dp))
             /* FullWidthSearchBar(
                   modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
                   query = "Search here",
@@ -309,13 +309,13 @@ fun FlutterSpatialContent() {
 
 
 @Composable
-fun Flutter2DContent(engine: FlutterEngine) {
+fun Flutter2DContent(engine: FlutterEngine,modifier: Modifier) {
 
      println("Flutter2DContent =>");
      println( FlutterComposeBridge.routes);
 
     AndroidView(
-        modifier = Modifier.wrapContentSize() ,
+        modifier = modifier ,
         factory = { ctx ->
             val activity = ctx as Activity
             val flutterView = FlutterView(activity)

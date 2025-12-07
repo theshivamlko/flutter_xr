@@ -7,8 +7,13 @@ import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 
 class FlutterXRHostApplication : Application() {
-/*
 
+
+    companion object {
+
+    }
+
+    /*
     companion object {
         lateinit var mainEngine: FlutterEngine
         lateinit var leftEngine: FlutterEngine
