@@ -1,4 +1,3 @@
-
 import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
@@ -6,20 +5,22 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/pigeon.g.dart',
     dartOptions: DartOptions(),
     kotlinOut:
-    'android/src/main/kotlin/dev/theshivamlko/flutter_xr/pigeon/FlutterXRPigeon.g.kt',
+        'android/src/main/kotlin/dev/theshivamlko/flutter_xr/pigeon/FlutterXRPigeon.g.kt',
     kotlinOptions: KotlinOptions(package: "dev.theshivamlko.flutter_xr"),
     dartPackageName: 'flutter_xr',
   ),
 )
-
-
-
 @HostApi()
 abstract class FlutterXRPigeon {
   bool isSpatialUiEnabled();
+
   void requestFullSpaceMode();
+
   void requestHomeSpaceMode();
+
   void listenEvents(String event);
+
+  void registerRoutes(List<String> routes);
 }
 
 @FlutterApi()

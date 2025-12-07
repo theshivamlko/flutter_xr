@@ -18,6 +18,7 @@ object  FlutterComposeBridge :XRStateProvider{
 
     lateinit var _spatialConfiguration: SpatialConfiguration
     lateinit var _spatialCapabilities: SpatialCapabilities
+    var routes: List<String>?= null;
 
 
     fun updateSpatialState(spatialConfiguration: SpatialConfiguration,spatialCapabilities: SpatialCapabilities) {

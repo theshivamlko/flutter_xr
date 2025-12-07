@@ -3,9 +3,18 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_xr/flutter_xr.dart';
+import 'package:flutter_xr_example/orbitWIdgets.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    FlutterXRWidget(
+      mainBody: const Scaffold(),
+      leftOrbit: leftOrbit(),
+      rightOrbit: rightOrbit(),
+      topOrbit: topOrbit(),
+      bottomOrbit: bottomOrbit(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -34,7 +43,7 @@ class _MyAppState extends State<MyApp> {
     _flutterXrPlugin.listenEvents((event) {
       print("MyApp listenEvents $event");
       checkSpatialEnabled();
-    },);
+    });
   }
 
   @override

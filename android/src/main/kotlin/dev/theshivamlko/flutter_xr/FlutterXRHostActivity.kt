@@ -2,6 +2,7 @@ package dev.theshivamlko.flutter_xr
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,7 +13,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -44,7 +43,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -58,19 +56,14 @@ import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
-import androidx.xr.compose.spatial.Orbiter
 import androidx.xr.compose.spatial.Subspace
 import androidx.xr.compose.subspace.SpatialAndroidViewPanel
 import androidx.xr.compose.subspace.layout.SubspaceModifier
-import androidx.xr.compose.subspace.layout.fillMaxSize
 import androidx.xr.compose.subspace.layout.height
 import androidx.xr.compose.subspace.layout.movable
 import androidx.xr.compose.subspace.layout.resizable
 import androidx.xr.compose.subspace.layout.width
-import androidx.xr.compose.spatial.ContentEdge
-import androidx.xr.compose.spatial.OrbiterOffsetType
-import androidx.xr.compose.subspace.SpatialPanel
-import androidx.xr.compose.subspace.layout.SpatialRoundedCornerShape
+import dev.theshivamlko.flutter_xr.FlutterXRHostActivity.Companion.mainEngine
 import dev.theshivamlko.flutter_xr.ui.theme.Pink40
 import dev.theshivamlko.flutter_xr.ui.theme.Pink80
 import dev.theshivamlko.flutter_xr.ui.theme.Purple40
@@ -81,14 +74,81 @@ import dev.theshivamlko.flutter_xr.ui.theme.Typography
 import io.flutter.embedding.android.FlutterSurfaceView
 import io.flutter.embedding.android.FlutterView
 import kotlinx.coroutines.flow.distinctUntilChanged
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
 
 class FlutterXRHostActivity : ComponentActivity() {
+    companion object {
+        lateinit var mainEngine: FlutterEngine
+        lateinit var leftEngine: FlutterEngine
+        lateinit var rightEngine: FlutterEngine
+        lateinit var topEngine: FlutterEngine
+        lateinit var bottomEngine: FlutterEngine
 
+
+
+    }
+    fun onCreateEngine(context: Context){
+        mainEngine = FlutterEngine(context)
+        mainEngine.navigationChannel.setInitialRoute("/")
+        mainEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        FlutterEngineCache
+            .getInstance()
+            .put("mainEngine", mainEngine)
+
+
+        leftEngine = FlutterEngine(context)
+        leftEngine.navigationChannel.setInitialRoute("/left")
+        leftEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        FlutterEngineCache
+            .getInstance()
+            .put("leftEngine", leftEngine)
+
+        rightEngine = FlutterEngine(context)
+        rightEngine.navigationChannel.setInitialRoute("/right")
+        rightEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        FlutterEngineCache
+            .getInstance()
+            .put("rightEngine", rightEngine)
+
+        topEngine = FlutterEngine(context)
+        topEngine.navigationChannel.setInitialRoute("/top")
+        topEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        FlutterEngineCache
+            .getInstance()
+            .put("topEngine", topEngine)
+
+
+
+        bottomEngine = FlutterEngine(context)
+        bottomEngine.navigationChannel.setInitialRoute("/bottom")
+        bottomEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        FlutterEngineCache
+            .getInstance()
+            .put("bottomEngine", bottomEngine)
+    }
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        onCreateEngine(applicationContext)
 
         setContent {
             MyXRApplicationTheme {
@@ -134,6 +194,7 @@ class FlutterXRHostActivity : ComponentActivity() {
         }
     }
 
+
     private fun myFunctions(
         isSpatialUiEnabled: Boolean,
         spatialConfiguration: SpatialConfiguration
@@ -164,8 +225,8 @@ fun FlutterSpatialContent() {
                 val flutterView = FlutterView(activity, surfaceView)
 
                 flutterView.post {
-                    flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
-                    FlutterXRHostApplication.flutterEngine.lifecycleChannel.appIsResumed()
+                    flutterView.attachToFlutterEngine(mainEngine)
+                    mainEngine.lifecycleChannel.appIsResumed()
                 }
 
                 // IMPORTANT: Force XR to refresh this view every frame
@@ -194,10 +255,10 @@ fun Flutter2DContent() {
         factory = { ctx ->
             val activity = ctx as Activity
             val flutterView = FlutterView(activity)
-            flutterView.attachToFlutterEngine(FlutterXRHostApplication.flutterEngine)
+            flutterView.attachToFlutterEngine(mainEngine)
             flutterView.post {
                 println("flutterView post")
-                FlutterXRHostApplication.flutterEngine.lifecycleChannel.appIsResumed()
+                mainEngine.lifecycleChannel.appIsResumed()
             }
 
             // REQUIRED FOR XR 2D MODE

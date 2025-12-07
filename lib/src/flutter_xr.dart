@@ -10,30 +10,33 @@ import 'XRCallbackHandler.dart';
 
 abstract class FlutterXrInterface {
   Future<bool> isSpatialUiEnabled();
+
   Future<void> requestFullSpaceMode();
+
   Future<void> requestHomeSpaceMode();
+  Future<void> setOrbitLayout();
+
   void listenEvents(ValueChanged<String> listen);
 }
 
 class FlutterXr implements FlutterXrInterface {
 
-  FlutterXRPigeon flutterXRPigeon=FlutterXRPigeon();
+
+  FlutterXRPigeon flutterXRPigeon = FlutterXRPigeon();
 
   @override
   Future<bool> isSpatialUiEnabled() {
     return flutterXRPigeon.isSpatialUiEnabled();
   }
 
-
   @override
-  Future<void> requestFullSpaceMode() async{
-   await flutterXRPigeon.requestFullSpaceMode();
-
+  Future<void> requestFullSpaceMode() async {
+    await flutterXRPigeon.requestFullSpaceMode();
   }
 
   @override
-  Future<void> requestHomeSpaceMode()async {
-   await flutterXRPigeon.requestHomeSpaceMode();
+  Future<void> requestHomeSpaceMode() async {
+    await flutterXRPigeon.requestHomeSpaceMode();
   }
 
   @override
@@ -46,7 +49,9 @@ class FlutterXr implements FlutterXrInterface {
     );
   }
 
+  @override
+  Future<void> setOrbitLayout() {
 
-
-
+    throw UnimplementedError();
+  }
 }

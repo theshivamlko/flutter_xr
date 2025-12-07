@@ -65,6 +65,7 @@ interface FlutterXRPigeon {
   fun requestFullSpaceMode()
   fun requestHomeSpaceMode()
   fun listenEvents(event: String)
+  fun registerRoutes(routes: List<String>)
 
   companion object {
     /** The codec used by FlutterXRPigeon. */
@@ -130,6 +131,24 @@ interface FlutterXRPigeon {
             val eventArg = args[0] as String
             val wrapped: List<Any?> = try {
               api.listenEvents(eventArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              FlutterXRPigeonPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.registerRoutes$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val routesArg = args[0] as List<String>
+            val wrapped: List<Any?> = try {
+              api.registerRoutes(routesArg)
               listOf(null)
             } catch (exception: Throwable) {
               FlutterXRPigeonPigeonUtils.wrapError(exception)
