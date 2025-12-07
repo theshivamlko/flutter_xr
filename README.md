@@ -5,6 +5,8 @@
 
 
 
+[![pub package](https://img.shields.io/pub/v/flutter_xr.svg)](https://pub.dev/packages/flutter_xr)
+
 Flutter XR plugin powered by the Android XR SDK build immersive 2D apps for Android XR with familiar Flutter widgets, with utilizing the Spatial Environment provided by Android XR devices.
 
 ## NOTE:
