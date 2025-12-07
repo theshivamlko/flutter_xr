@@ -30,6 +30,9 @@ This is POC (Proof-Of-concept) that flutter app can run and execute code on Andr
 
 ## Features
 
+<img src="https://github.com/theshivamlko/flutter_xr/blob/main/doc/raw/flutter_xr_0.0.2-dev_demo.gif" />
+
+
 - 🧩 **Flutter UI**  
   Main Panel: Make UI with any Flutter `Widget` for 2D app and Logics with Dart Programming
 
