@@ -279,7 +279,7 @@ fun FlutterSpatialContent() {
             offsetType = OrbiterOffsetType.InnerEdge,
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
-            Flutter2DContent(rightEngine,Modifier.width(200.dp))
+            Flutter2DContent(rightEngine,Modifier.width(400.dp))
             /* FullWidthSearchBar(
                   modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
                   query = "Search here",

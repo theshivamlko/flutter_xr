@@ -4,8 +4,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_xr/flutter_xr.dart';
 import 'package:flutter_xr_example/orbitWIdgets.dart';
+import 'package:intl/intl.dart';
 
 final _flutterXrPlugin = FlutterXr();
+ValueNotifier<String> leftOrbitListen = ValueNotifier<String>("");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,10 @@ void main() async {
       ContentEdge.top,
       Alignment.centerHorizontally,
       OrbiterOffsetType.innerEdge,
-      topOrbit(),
+      topOrbit((value) {
+        print("topOrbit $value");
+        leftOrbitListen.value = value;
+      }),
       width: 100,
       height: 100,
     ),
@@ -103,15 +108,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isSpatialEnabled = false;
-  int count = 1;
+  String formattedDate1 = "";
 
   @override
   void initState() {
     super.initState();
 
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      ++count;
-      print("Count $count");
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      DateFormat customFormat = DateFormat("dd/MM/yyyy HH:mm:ss");
+      formattedDate1 = customFormat.format(DateTime.now());
+      print("Count $formattedDate1");
       setState(() {});
     });
 
@@ -125,18 +131,29 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('Plugin example app')),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              Text('Count: $count\n\n', style: TextStyle(fontSize: 30)),
               Text(
-                'isSpatialEnabled: $isSpatialEnabled\n\n',
+                'Local Time: $formattedDate1\n',
                 style: TextStyle(fontSize: 30),
               ),
+              Text(
+                'isSpatialEnabled: $isSpatialEnabled\n',
+                style: TextStyle(fontSize: 30),
+              ),
+              ValueListenableBuilder(
+                valueListenable: leftOrbitListen,
+                builder: (context, value, child) {
+                  return Text(
+                    'Text Input => ${leftOrbitListen.value}',
+                    style: TextStyle(fontSize: 30),
+                  );
+                },
+              ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(32.0),
                 child: ElevatedButton(
                   onPressed: () => checkSpatialEnabled(),
                   child: Text(
