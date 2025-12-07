@@ -5,10 +5,10 @@
 
 
 
-> Flutter XR plugin powered by the Android XR SDK build immersive 2D apps for Android XR with familiar Flutter widgets, with utilizing the Spatial Environment provided by Android XR devices.
+Flutter XR plugin powered by the Android XR SDK build immersive 2D apps for Android XR with familiar Flutter widgets, with utilizing the Spatial Environment provided by Android XR devices.
 
 ## NOTE:
-⚠️ NOT FOR PRODUCTION 
+⚠️ **NOT PRODUCTION READY**
 
 This is POC (Proof-Of-concept) that flutter app can run and execute code on Android XR SDK. Still plugin has known issues.
 
@@ -18,7 +18,7 @@ This is POC (Proof-Of-concept) that flutter app can run and execute code on Andr
 
 [Flutter XR](https://github.com/theshivamlko/flutter_xr)
 
-[Android XR SDK](https://developer.android.com/develop/xr/get-started)
+[Android XR SDK](https://developer.android.com/develop/xr/get-started) , current XR Compose is [alpha09](https://developer.android.com/jetpack/androidx/releases/xr-compose), check all plugin versions here [build.gradle](./android/build.gradle)
 
 
 > **Status:** In active development (Dev‑Mode). APIs may change.
@@ -31,13 +31,13 @@ This is POC (Proof-Of-concept) that flutter app can run and execute code on Andr
   Main Panel: Make UI with any Flutter `Widget` for 2D app and Logics with Dart Programming
 
 - 🧭 **Orbit‑based layout**  
-  Define separate Flutter widgets for **left**, **right**, **top**, and **bottom** orbits in XR. Currently these are not dynamic, may be in future.
+  Define separate Flutter widgets for **left**, **right**, **top**, and **bottom** orbits in XR. Currently these are not dynamic, may change in future. Read more here 
    [Orbiter](https://developer.android.com/reference/kotlin/androidx/xr/compose/spatial/package-summary#Orbiter)
 
 - 📱 **Shared 2D & XR UI patterns**  
-  Reuse the same components (bottom nav, search bar, lists, feeds) both in classic 2D mode and XR surfaces.
+  Reuse the same Widgets (bottom nav,  list view, text) both in classic 2D mode and XR surfaces.
 
-- 📱 **Route base UI for different panels **  
+- 📱 **Route base UI for different panels**  
   Use named routes to set different view on separate orbits
 
 - 🧪 **Example app included**  
@@ -50,7 +50,7 @@ This is POC (Proof-Of-concept) that flutter app can run and execute code on Andr
 ---
 
 ## Prerequisite
-1. [Flutter](https://flutter.dev/)
+1. [Flutter SDK](https://flutter.dev/)
 2. [Android Studio](https://developer.android.com/studio) Otter 2 Feature Drop | 2025.2.2 or above
 3. Android XR Headset emulator with API 34 Google Play Store
 
@@ -94,7 +94,7 @@ import 'package:flutter_xr/flutter_xr.dart';
 ```
 
 ### 2. Main Panel UI , without Orbits
-Just use same Flutter app as it is, no changes are required. The app run has normal Table app in Android XR. 
+Just use same Flutter app as it is, no changes are required. The app run has normal Tablet app in Android XR. 
 
 **Technically u don't need plugin for Simple UI App , but for accessing Android XR SDK Native apis u can use this plugin**
 ```dart
@@ -137,7 +137,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// register routes on native side to show widgets in orbit
-  /// leftOrbit, rightOrbit, topOrbit, bottomOrbit
+  /// [Optional] leftOrbit, rightOrbit, topOrbit, bottomOrbit
   /// registerRoutes() will return a routes to be used in MaterialApp
   final appRoutes = await _flutterXrPlugin.registerRoutes(
     leftOrbit: Orbiter(
@@ -190,7 +190,7 @@ void main() async {
 ```
 
 
-### 3. Check for spatial capabilities is Enabled
+### 3. Check for spatial capabilities is enabled
 
 ```dart
 Future<void> checkSpatialEnabled() async {
@@ -204,7 +204,11 @@ Future<void> checkSpatialEnabled() async {
 
 ### 4. Transition from Home Space to Full Space
 
-A user can experience your app in two modes, Home Space or Full Space. In Home Space, a user is able to multitask with your app running side by side with other apps. In Full Space, your app takes center stage as the focus of the user's experience with full access to the immersive capabilities of Android XR.
+A user can experience your app in 2 modes, **Home Space** or **Full Space**.
+
+In **Home Space**, a user is able to multitask with your app running side by side with other apps. 
+
+In **Full Space**, your app takes center stage as the focus of the user's experience with full access to the immersive capabilities of Android XR.
 
 ```dart
   void toggleSpatialFullScreen() async {
@@ -247,11 +251,8 @@ Because platform requirements evolve quickly, you should always verify against t
  
 ## Roadmap
 
-- More XR layouts (panels, floating windows, radial menus)
-- Better navigation and state patterns for multi‑orbit XR apps
-- Additional platform support (visionOS / iOS / desktop / web) where meaningful
-- More polished sample experiences and documentation
-
+- Optimize use of `FlutterEngine` or alternative
+- Better navigation multi‑orbit XR apps
 ---
 
 ## License
