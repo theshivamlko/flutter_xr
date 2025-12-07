@@ -1,8 +1,7 @@
 # Flutter XR
 
 
-![](https://github.com/theshivamlko/flutter_xr/blob/main/doc/raw/Flutter_XR_0.0.2-dev_Demo_theshivamlko_navoki-min.jpg)
-
+<img src="https://raw.githubusercontent.com/theshivamlko/flutter_xr/main/doc/raw/Flutter_XR_0.0.2-dev_Demo_theshivamlko_navoki-min.jpg" />
 
 
 [![pub package](https://img.shields.io/pub/v/flutter_xr.svg)](https://pub.dev/packages/flutter_xr)
