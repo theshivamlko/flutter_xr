@@ -1,6 +1,6 @@
 name: flutter_xr
 description: "Flutter XR plugin powered by the Android XR SDK build immersive 2D apps for Android XR with familiar Flutter widgets, with utilizing the Spatial Environment provided by Android XR devices."
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/theshivamlko/flutter_xr
 
 environment:

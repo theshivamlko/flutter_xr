@@ -8,10 +8,6 @@
 
 Flutter XR plugin powered by the Android XR SDK build immersive 2D apps for Android XR with familiar Flutter widgets, with utilizing the Spatial Environment provided by Android XR devices.
 
-## NOTE:
-⚠️ **NOT PRODUCTION READY**
-
-This is POC (Proof-Of-concept) that flutter app can run and execute code on Android XR SDK. Still plugin has known issues.
 
 `flutter_xr` lets you embed existing Flutter UI and Dart code logics into an Android XR environment. It wraps the Android XR SDK so you can stay in Flutter while targeting spatial / XR devices.
 
@@ -21,6 +17,12 @@ This is POC (Proof-Of-concept) that flutter app can run and execute code on Andr
 
 [Android XR SDK](https://developer.android.com/develop/xr/get-started) , current XR Compose is [alpha09](https://developer.android.com/jetpack/androidx/releases/xr-compose), check all plugin versions here [build.gradle](./android/build.gradle)
 
+---
+
+## NOTE:
+⚠️ **NOT PRODUCTION READY**
+
+This is POC (Proof-Of-concept) that flutter app can run and execute code on Android XR SDK. Still plugin has known issues.
 
 > **Status:** In active development (Dev‑Mode). APIs may change.
 
@@ -84,7 +86,7 @@ cd example
 flutter pub get
 flutter run
 ```
-
+---
 
 ## Usage
 
