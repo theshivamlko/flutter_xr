@@ -30,6 +30,11 @@ class _MyAppState extends State<MyApp> {
       print("Count $count");
       setState(() {});
     });
+
+    _flutterXrPlugin.listenEvents((event) {
+      print("MyApp listenEvents $event");
+      checkSpatialEnabled();
+    },);
   }
 
   @override
@@ -79,14 +84,13 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  void toggleSpatialFullScreen()async {
+  void toggleSpatialFullScreen() async {
     print("toggleSpatialFullScreen $isSpatialEnabled");
     if (isSpatialEnabled) {
-    await  _flutterXrPlugin.requestHomeSpaceMode();
-    }else{
-     await _flutterXrPlugin.requestFullSpaceMode();
+      await _flutterXrPlugin.requestHomeSpaceMode();
+    } else {
+      await _flutterXrPlugin.requestFullSpaceMode();
     }
     print("toggleSpatialFullScreen 2");
-    checkSpatialEnabled();
   }
 }

@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -79,6 +80,7 @@ import dev.theshivamlko.flutter_xr.ui.theme.PurpleGrey80
 import dev.theshivamlko.flutter_xr.ui.theme.Typography
 import io.flutter.embedding.android.FlutterSurfaceView
 import io.flutter.embedding.android.FlutterView
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class FlutterXRHostActivity : ComponentActivity() {
 
@@ -102,9 +104,20 @@ class FlutterXRHostActivity : ComponentActivity() {
 
                 println("MyXRApplicationTheme ${FlutterComposeBridge.isSpatialUiEnabled()}")
 
-                LaunchedEffect(LocalSpatialConfiguration.current) {
-                    println("LaunchedEffect ${FlutterComposeBridge.isSpatialUiEnabled()}")
-              //      FlutterComposeBridge.setSpatialUiEnabled(isSpatialUiEnabled)
+                LaunchedEffect(Unit) {
+                    println("MyXRApplicationTheme LaunchedEffect ${FlutterComposeBridge.isSpatialUiEnabled()}")
+                    snapshotFlow { FlutterComposeBridge._spatialCapabilities.isSpatialUiEnabled }
+                        .distinctUntilChanged()
+                        .collect { enabled ->
+                            println("MyXRApplicationTheme snapshotFlow $enabled")
+                            FlutterComposeBridge.sendEvent("spatial_changed")
+
+                            // Update your bridge
+                         //   FlutterComposeBridge.setSpatialUiEnabled(enabled)
+
+                            // Notify Flutter via Pigeon
+                       //     SpatialEventEmitter.dart?.onSpatialUiChanged(enabled)
+                        }
                 }
 
 

@@ -15,6 +15,9 @@ import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 private object FlutterXRPigeonPigeonUtils {
 
+  fun createConnectionError(channelName: String): FlutterError {
+    return FlutterError("channel-error",  "Unable to establish connection on channel: '$channelName'.", "")  }
+
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
   }
@@ -61,6 +64,7 @@ interface FlutterXRPigeon {
   fun isSpatialUiEnabled(): Boolean
   fun requestFullSpaceMode()
   fun requestHomeSpaceMode()
+  fun listenEvents(event: String)
 
   companion object {
     /** The codec used by FlutterXRPigeon. */
@@ -118,6 +122,50 @@ interface FlutterXRPigeon {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_xr.FlutterXRPigeon.listenEvents$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val eventArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.listenEvents(eventArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              FlutterXRPigeonPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class FlutterXRPigeonCallbacks(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by FlutterXRPigeonCallbacks. */
+    val codec: MessageCodec<Any?> by lazy {
+      FlutterXRPigeonPigeonCodec()
+    }
+  }
+  fun listenEvents(eventArg: String, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_xr.FlutterXRPigeonCallbacks.listenEvents$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(eventArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(FlutterXRPigeonPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
 }

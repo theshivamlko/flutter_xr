@@ -21,7 +21,13 @@ class FlutterXrPlugin :
 //        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_xr")
 //        channel.setMethodCallHandler(this)
 
-        FlutterXRPigeon.setUp(flutterPluginBinding.binaryMessenger, api = FlutterXrPluginImplementation())
+        val flutterXrPluginImplementation = FlutterXrPluginImplementation()
+        flutterXrPluginImplementation.flutterCallback =
+            FlutterXRPigeonCallbacks(flutterPluginBinding.binaryMessenger)
+
+        FlutterXRPigeon.setUp(flutterPluginBinding.binaryMessenger, api =flutterXrPluginImplementation)
+
+
     }
 
     override fun onMethodCall(

@@ -1,13 +1,18 @@
 // filepath: lib/src/flutter_xr.dart
 
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_xr/src/pigeon/pigeon.g.dart';
 
 import '../flutter_xr_platform_interface.dart';
+import 'XRCallbackHandler.dart';
 
 abstract class FlutterXrInterface {
   Future<bool> isSpatialUiEnabled();
   Future<void> requestFullSpaceMode();
   Future<void> requestHomeSpaceMode();
+  void listenEvents(ValueChanged<String> listen);
 }
 
 class FlutterXr implements FlutterXrInterface {
@@ -30,4 +35,18 @@ class FlutterXr implements FlutterXrInterface {
   Future<void> requestHomeSpaceMode()async {
    await flutterXRPigeon.requestHomeSpaceMode();
   }
+
+  @override
+  void listenEvents(ValueChanged<String> listen) {
+    FlutterXRPigeonCallbacks.setUp(
+      XRCallbackHandler((event) {
+        print("FlutterXrP FlutterXr listenEvents $event");
+        listen(event);
+      }),
+    );
+  }
+
+
+
+
 }

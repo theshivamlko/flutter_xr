@@ -12,9 +12,17 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 
+
+
 @HostApi()
 abstract class FlutterXRPigeon {
   bool isSpatialUiEnabled();
   void requestFullSpaceMode();
   void requestHomeSpaceMode();
+  void listenEvents(String event);
+}
+
+@FlutterApi()
+abstract class FlutterXRPigeonCallbacks {
+  void listenEvents(String event);
 }

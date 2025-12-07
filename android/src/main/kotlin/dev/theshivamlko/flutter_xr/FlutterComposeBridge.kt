@@ -1,23 +1,34 @@
 package dev.theshivamlko.flutter_xr
 
+import android.media.metrics.Event
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.xr.compose.platform.SpatialCapabilities
 import androidx.xr.compose.platform.SpatialConfiguration
 
+interface OnFlutterComposeBridgeListener{
+    fun onListen(event: String)
+}
+
 object  FlutterComposeBridge :XRStateProvider{
 
 
-    var spatialUiState=true
+    lateinit var onListener: OnFlutterComposeBridgeListener
+
     lateinit var _spatialConfiguration: SpatialConfiguration
     lateinit var _spatialCapabilities: SpatialCapabilities
 
 
     fun updateSpatialState(spatialConfiguration: SpatialConfiguration,spatialCapabilities: SpatialCapabilities) {
-
         _spatialConfiguration=spatialConfiguration
         _spatialCapabilities=spatialCapabilities
+    }
+
+    fun sendEvent(event: String) {
+        println("Native FlutterComposeBridge onSpatialUiChanged $event")
+        onListener.onListen(event)
+
     }
 
 
