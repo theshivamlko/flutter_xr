@@ -113,47 +113,47 @@ class FlutterXRHostActivity : ComponentActivity() {
             .getInstance()
             .put("mainEngine", mainEngine)
 
-            leftEngine = FlutterEngine(context)
-            leftEngine.navigationChannel.setInitialRoute("/left")
-            leftEngine.dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-            )
+        leftEngine = FlutterEngine(context)
+        leftEngine.navigationChannel.setInitialRoute("/left")
+        leftEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
 
-            FlutterEngineCache
-                .getInstance()
-                .put("leftEngine", leftEngine)
+        FlutterEngineCache
+            .getInstance()
+            .put("leftEngine", leftEngine)
 
-            rightEngine = FlutterEngine(context)
-            rightEngine.navigationChannel.setInitialRoute("/right")
-            rightEngine.dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-            )
+        rightEngine = FlutterEngine(context)
+        rightEngine.navigationChannel.setInitialRoute("/right")
+        rightEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
 
-            FlutterEngineCache
-                .getInstance()
-                .put("rightEngine", rightEngine)
+        FlutterEngineCache
+            .getInstance()
+            .put("rightEngine", rightEngine)
 
-            topEngine = FlutterEngine(context)
-            topEngine.navigationChannel.setInitialRoute("/top")
-            topEngine.dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-            )
+        topEngine = FlutterEngine(context)
+        topEngine.navigationChannel.setInitialRoute("/top")
+        topEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
 
-            FlutterEngineCache
-                .getInstance()
-                .put("topEngine", topEngine)
+        FlutterEngineCache
+            .getInstance()
+            .put("topEngine", topEngine)
 
 
 
-            bottomEngine = FlutterEngine(context)
-            bottomEngine.navigationChannel.setInitialRoute("/bottom")
-            bottomEngine.dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-            )
+        bottomEngine = FlutterEngine(context)
+        bottomEngine.navigationChannel.setInitialRoute("/bottom")
+        bottomEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
 
-            FlutterEngineCache
-                .getInstance()
-                .put("bottomEngine", bottomEngine)
+        FlutterEngineCache
+            .getInstance()
+            .put("bottomEngine", bottomEngine)
     }
 
     @SuppressLint("RestrictedApi")
@@ -250,13 +250,7 @@ fun FlutterSpatialContent() {
         ) {
 
             Flutter2DContent(topEngine, Modifier.height(80.dp))
-            /*FullWidthSearchBar(
-                 modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
-                 query = "Search here",
-                 onQueryChange = { newQuery: String ->
 
-                 }
-             )*/
         }
         Orbiter(
             position = ContentEdge.Bottom,
@@ -265,13 +259,7 @@ fun FlutterSpatialContent() {
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
             Flutter2DContent(bottomEngine,Modifier.height(80.dp))
-            /* FullWidthSearchBar(
-                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
-                  query = "Search here",
-                  onQueryChange = { newQuery: String ->
 
-                  }
-              )*/
         }
         Orbiter(
             position = ContentEdge.End,
@@ -280,13 +268,7 @@ fun FlutterSpatialContent() {
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
             Flutter2DContent(rightEngine,Modifier.width(400.dp))
-            /* FullWidthSearchBar(
-                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
-                  query = "Search here",
-                  onQueryChange = { newQuery: String ->
 
-                  }
-              )*/
         }
         Orbiter(
             position = ContentEdge.Start,
@@ -295,13 +277,7 @@ fun FlutterSpatialContent() {
             shape = SpatialRoundedCornerShape(CornerSize(28.dp))
         ) {
             Flutter2DContent(leftEngine,Modifier.width(80.dp))
-            /* FullWidthSearchBar(
-                  modifier = Modifier.height(64.dp).padding(horizontal = 32.dp),
-                  query = "Search here",
-                  onQueryChange = { newQuery: String ->
 
-                  }
-              )*/
         }
     }
 
@@ -311,8 +287,8 @@ fun FlutterSpatialContent() {
 @Composable
 fun Flutter2DContent(engine: FlutterEngine,modifier: Modifier) {
 
-     println("Flutter2DContent =>");
-     println( FlutterComposeBridge.routes);
+    println("Flutter2DContent =>");
+    println( FlutterComposeBridge.routes);
 
     AndroidView(
         modifier = modifier ,

@@ -257,6 +257,7 @@ Because platform requirements evolve quickly, you should always verify against t
  
 ## Roadmap
 
+- Complete support for Flutter app in HOME_SPACE mode
 - Optimize use of `FlutterEngine` or alternative
 - Better navigation multi‑orbit XR apps
 ---
