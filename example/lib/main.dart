@@ -64,44 +64,7 @@ void main() async {
     ),
   );
 
-  /* runApp(
-    FlutterXRWidget(
-      mainBody: const MyApp(),
-      flutterXr: _flutterXrPlugin,
-      leftOrbit: Orbiter(
-        ContentEdge.start,
-        Alignment.centerVertically,
-        OrbiterOffsetType.innerEdge,
-        leftOrbit(),
-        width: 100,
-        height: 100,
-      ),
-      rightOrbit: Orbiter(
-        ContentEdge.end,
-        Alignment.centerVertically,
-        OrbiterOffsetType.innerEdge,
-        leftOrbit(),
-        width: 100,
-        height: 100,
-      ),
-      topOrbit: Orbiter(
-        ContentEdge.top,
-        Alignment.centerHorizontally,
-        OrbiterOffsetType.innerEdge,
-        leftOrbit(),
-        width: 100,
-        height: 100,
-      ),
-      bottomOrbit: Orbiter(
-        ContentEdge.bottom,
-        Alignment.centerHorizontally,
-        OrbiterOffsetType.innerEdge,
-        leftOrbit(),
-        width: 100,
-        height: 100,
-      ),
-    ),
-  );*/
+
 }
 
 class MyApp extends StatefulWidget {
